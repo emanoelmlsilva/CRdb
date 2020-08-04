@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DemoApplication<crdb>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.mini_projeto.crdb.DemoApplication",
+            "projectName": "crdb",
+            "args": ""
+        }
+    ]
+}
