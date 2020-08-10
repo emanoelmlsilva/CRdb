@@ -3,6 +3,7 @@ package com.mini_projeto.crdb.services;
 import java.util.Optional;
 
 import com.mini_projeto.crdb.dtos.UserDTO;
+import com.mini_projeto.crdb.dtos.UserUpdateDTO;
 import com.mini_projeto.crdb.exceptions.UserAlreadyExistsException;
 import com.mini_projeto.crdb.exceptions.UserInvalidException;
 import com.mini_projeto.crdb.models.User;
@@ -60,6 +61,23 @@ public class UserService {
         }
 
         return user.get();
+    }
+
+    public UserUpdateDTO update(UserUpdateDTO userUpdateDTO, String headerAuthorization) {
+
+        Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);
+
+        User userOld = validateUser(userEmail);
+
+        userOld.setName(userUpdateDTO.getName());
+
+        userOld.setLastName(userUpdateDTO.getLastName());
+
+        userOld.setPassword(userUpdateDTO.getPassword());
+
+        userRepository.save(userOld);
+
+        return new UserUpdateDTO(userOld);
     }
 
 }

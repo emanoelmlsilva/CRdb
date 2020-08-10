@@ -1,6 +1,7 @@
 package com.mini_projeto.crdb.controllers;
 
 import com.mini_projeto.crdb.dtos.UserDTO;
+import com.mini_projeto.crdb.dtos.UserUpdateDTO;
 import com.mini_projeto.crdb.exceptions.UserAlreadyExistsException;
 import com.mini_projeto.crdb.exceptions.UserInvalidException;
 import com.mini_projeto.crdb.models.User;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +46,16 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
+    }
+
+    @PutMapping("/auth/user")
+    public ResponseEntity<UserUpdateDTO> update(@RequestHeader("Authorization") String token,
+            @RequestBody UserUpdateDTO user) {
+        try {
+            return new ResponseEntity<UserUpdateDTO>(userService.update(user, token), HttpStatus.OK);
+        } catch (UserInvalidException erro) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
 }
