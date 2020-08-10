@@ -9,19 +9,21 @@ import com.mini_projeto.crdb.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/v1/api/user")
+@RequestMapping(value = "/v1/api")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    @PostMapping("/user")
     public ResponseEntity<UserDTO> insert(@RequestBody User user) {
 
         try {
@@ -31,6 +33,17 @@ public class UserController {
         } catch (UserInvalidException invalidErro) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+    }
+
+    @DeleteMapping("/auth/user")
+    public ResponseEntity<UserDTO> delete(@RequestHeader("Authorization") String token) {
+
+        try {
+            return new ResponseEntity<UserDTO>(userService.delete(token), HttpStatus.OK);
+        } catch (UserInvalidException erro) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
     }
 
 }
