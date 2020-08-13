@@ -1,7 +1,11 @@
 package com.mini_projeto.crdb.controllers;
 
 import com.mini_projeto.crdb.dtos.CommentDTO;
+import com.mini_projeto.crdb.dtos.CommentDeletedDTO;
 import com.mini_projeto.crdb.exceptions.CommentAlreadyExistsException;
+import com.mini_projeto.crdb.exceptions.CommentNotBelongException;
+import com.mini_projeto.crdb.exceptions.CommentNotExistsException;
+import com.mini_projeto.crdb.exceptions.CommentRemovedException;
 import com.mini_projeto.crdb.exceptions.DisciplineNotExistsException;
 import com.mini_projeto.crdb.models.Comment;
 import com.mini_projeto.crdb.services.CommentService;
@@ -9,6 +13,7 @@ import com.mini_projeto.crdb.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,8 +48,22 @@ public class CommentController {
             return new ResponseEntity<Comment>(commentService.update(token, id, commentDTO), HttpStatus.OK);
         } catch (CommentAlreadyExistsException erro) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        } catch (DisciplineNotExistsException e) {
+        } catch (DisciplineNotExistsException | CommentRemovedException | CommentNotExistsException
+                | CommentNotBelongException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Comment> delete(@RequestHeader("Authorization") String token, @PathVariable Long id) {
+        try {
+            return new ResponseEntity<Comment>(commentService.delete(token, id), HttpStatus.OK);
+        } catch (CommentNotExistsException | CommentNotBelongException erro) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CommentRemovedException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+    }
+
 }

@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import com.mini_projeto.crdb.Utils.ValidateUser;
 import com.mini_projeto.crdb.dtos.CommentDTO;
-import com.mini_projeto.crdb.exceptions.CommentAlreadyExistsException;
+import com.mini_projeto.crdb.exceptions.CommentNotBelongException;
 import com.mini_projeto.crdb.exceptions.CommentNotExistsException;
+import com.mini_projeto.crdb.exceptions.CommentRemovedException;
 import com.mini_projeto.crdb.exceptions.DisciplineNotExistsException;
 import com.mini_projeto.crdb.exceptions.UserInvalidException;
 import com.mini_projeto.crdb.models.Comment;
@@ -17,10 +17,8 @@ import com.mini_projeto.crdb.repositories.CommentRepository;
 import com.mini_projeto.crdb.repositories.DisciplineRepository;
 import com.mini_projeto.crdb.repositories.UserRepository;
 
-import org.hibernate.validator.internal.metadata.facets.Validatable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -60,7 +58,7 @@ public class CommentService {
     }
 
     public Comment update(String headerAuthorization, Long id, CommentDTO commentDTO)
-            throws DisciplineNotExistsException {
+            throws DisciplineNotExistsException, CommentRemovedException, CommentNotBelongException {
 
         // ler o token e recuperar o subject
         Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);
@@ -70,7 +68,42 @@ public class CommentService {
 
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotExistsException());
 
+        if (!comment.getUser().getEmail().equals(userEmail.get())) {
+            throw new CommentNotBelongException("Commentario não pertence ao usuario");
+        }
+
+        if (comment.getDeleted()) {
+            throw new CommentRemovedException("Commentario ja foi deletado");
+        }
+
         comment.setComment(commentDTO.getComment());
+
+        comment = setDateTime(comment);
+
+        comment.setId(id);
+
+        return commentRepository.save(comment);
+
+    }
+
+    public Comment delete(String headerAuthorization, Long id)
+            throws CommentRemovedException, CommentNotBelongException {
+
+        Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);
+
+        validateUser(userEmail);
+
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotExistsException());
+
+        if (!comment.getUser().getEmail().equals(userEmail.get())) {
+            throw new CommentNotBelongException("Commentario não pertence ao usuario");
+        }
+
+        if (comment.getDeleted()) {
+            throw new CommentRemovedException("Commentario ja foi deletado");
+        }
+
+        comment.setDeleted(true);
 
         comment = setDateTime(comment);
 

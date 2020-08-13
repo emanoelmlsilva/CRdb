@@ -39,7 +39,7 @@ public class Comment {
 
     @NotNull
     @JsonIgnore
-    private boolean active;
+    private Boolean deleted;
 
     @JsonIgnore
     @JoinColumn(name = "discipline_id")
@@ -55,6 +55,17 @@ public class Comment {
         this.localDate = LocalDate.now();
         this.localTime = LocalTime.now();
         this.comment = commentDTO.getComment();
-        this.active = true;
+        this.deleted = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment [comment=" + (this.deleted ? "" : comment) + ", deleted=" + deleted + ", discipline="
+                + discipline + ", id=" + id + ", localDate=" + localDate + ", localTime=" + localTime + ", user=" + user
+                + "]";
+    }
+
+    public String getComment() {
+        return this.deleted ? "" : comment;
     }
 }
