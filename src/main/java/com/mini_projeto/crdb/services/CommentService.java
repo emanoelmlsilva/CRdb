@@ -8,7 +8,7 @@ import com.mini_projeto.crdb.dtos.CommentDTO;
 import com.mini_projeto.crdb.exceptions.CommentNotBelongException;
 import com.mini_projeto.crdb.exceptions.CommentNotExistsException;
 import com.mini_projeto.crdb.exceptions.CommentRemovedException;
-import com.mini_projeto.crdb.exceptions.DisciplineNotExistsException;
+import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
 import com.mini_projeto.crdb.exceptions.UserInvalidException;
 import com.mini_projeto.crdb.models.Comment;
 import com.mini_projeto.crdb.models.Discipline;
@@ -36,7 +36,7 @@ public class CommentService {
     JWTService jwtService;
 
     public Comment insert(String headerAuthorization, String id_discipline, CommentDTO commentDTO)
-            throws DisciplineNotExistsException {
+            throws DisciplineNotFoundException {
 
         // ler o token e recuperar o subject
         Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);
@@ -45,7 +45,7 @@ public class CommentService {
         User user = validateUser(userEmail);
 
         Discipline newDiscipline = disciplineRepository.findById(id_discipline)
-                .orElseThrow(() -> new DisciplineNotExistsException());
+                .orElseThrow(() -> new DisciplineNotFoundException());
 
         Comment comment = new Comment(commentDTO);
 
@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     public Comment update(String headerAuthorization, Long id, CommentDTO commentDTO)
-            throws DisciplineNotExistsException, CommentRemovedException, CommentNotBelongException {
+            throws DisciplineNotFoundException, CommentRemovedException, CommentNotBelongException {
 
         // ler o token e recuperar o subject
         Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);

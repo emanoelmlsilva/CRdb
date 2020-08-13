@@ -6,7 +6,7 @@ import com.mini_projeto.crdb.exceptions.CommentAlreadyExistsException;
 import com.mini_projeto.crdb.exceptions.CommentNotBelongException;
 import com.mini_projeto.crdb.exceptions.CommentNotExistsException;
 import com.mini_projeto.crdb.exceptions.CommentRemovedException;
-import com.mini_projeto.crdb.exceptions.DisciplineNotExistsException;
+import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
 import com.mini_projeto.crdb.models.Comment;
 import com.mini_projeto.crdb.services.CommentService;
 
@@ -36,7 +36,7 @@ public class CommentController {
             return new ResponseEntity<Comment>(commentService.insert(token, id_discipline, commentDTO), HttpStatus.OK);
         } catch (CommentAlreadyExistsException erro) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        } catch (DisciplineNotExistsException e) {
+        } catch (DisciplineNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -48,7 +48,7 @@ public class CommentController {
             return new ResponseEntity<Comment>(commentService.update(token, id, commentDTO), HttpStatus.OK);
         } catch (CommentAlreadyExistsException erro) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        } catch (DisciplineNotExistsException | CommentRemovedException | CommentNotExistsException
+        } catch (DisciplineNotFoundException | CommentRemovedException | CommentNotExistsException
                 | CommentNotBelongException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

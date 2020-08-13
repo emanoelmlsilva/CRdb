@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mini_projeto.crdb.dtos.DisciplineDTO;
+import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
 import com.mini_projeto.crdb.models.Discipline;
 import com.mini_projeto.crdb.repositories.DisciplineRepository;
 
@@ -55,8 +56,20 @@ public class DisciplineService {
     }
 
     public List<Discipline> findAll() {
+
         return disciplineRepository.findAll();
-        // fromToBaseDisciplina(
+
+    }
+
+    public List<Discipline> findByName(String name) throws DisciplineNotFoundException {
+
+        List<Discipline> list = disciplineRepository.findByNameContainsIgnoreCase(name);
+
+        if (list.size() == 0)
+            throw new DisciplineNotFoundException();
+
+        return list;
+
     }
 
     public List<DisciplineDTO> fromToBaseDisciplina(List<Discipline> disciplines) {
