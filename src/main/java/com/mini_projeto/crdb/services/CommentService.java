@@ -119,7 +119,7 @@ public class CommentService {
         return comment;
     }
 
-    private User validateUser(Optional<String> email) {
+    public User validateUser(Optional<String> email) {
         if (email.isEmpty()) {
             throw new UserInvalidException("Email não existe!");
         }

@@ -1,7 +1,6 @@
 package com.mini_projeto.crdb.controllers;
 
 import com.mini_projeto.crdb.dtos.CommentDTO;
-import com.mini_projeto.crdb.dtos.CommentDeletedDTO;
 import com.mini_projeto.crdb.exceptions.CommentAlreadyExistsException;
 import com.mini_projeto.crdb.exceptions.CommentNotBelongException;
 import com.mini_projeto.crdb.exceptions.CommentNotExistsException;

@@ -33,9 +33,7 @@ public class Discipline {
     @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    // @ManyToMany
-    // @JoinTable(name = "Discipline_User", joinColumns = @JoinColumn(name =
-    // "discipline_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    // private List<User> users;
+    @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
+    private List<Favorite> favorites;
 
 }

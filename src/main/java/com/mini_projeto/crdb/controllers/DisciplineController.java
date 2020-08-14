@@ -23,14 +23,14 @@ public class DisciplineController {
     private DisciplineService disciplineService;
 
     @GetMapping("")
-    public ResponseEntity<List<Discipline>> findAll() {
-        return new ResponseEntity<List<Discipline>>(disciplineService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<DisciplineDTO>> findAll() {
+        return new ResponseEntity<List<DisciplineDTO>>(disciplineService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<List<Discipline>> findAll(@PathVariable String name) {
+    public ResponseEntity<List<DisciplineDTO>> findAll(@PathVariable String name) {
         try {
-            return new ResponseEntity<List<Discipline>>(disciplineService.findByName(name), HttpStatus.OK);
+            return new ResponseEntity<List<DisciplineDTO>>(disciplineService.findByName(name), HttpStatus.OK);
         } catch (DisciplineNotFoundException erro) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

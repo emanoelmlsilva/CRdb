@@ -63,6 +63,7 @@ public class Comment {
         return "Comment [comment=" + (this.deleted ? "" : comment) + ", deleted=" + deleted + ", discipline="
                 + discipline + ", id=" + id + ", localDate=" + localDate + ", localTime=" + localTime + ", user=" + user
                 + "]";
+
     }
 
     public String getComment() {

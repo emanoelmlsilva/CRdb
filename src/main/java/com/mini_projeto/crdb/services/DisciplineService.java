@@ -55,20 +55,20 @@ public class DisciplineService {
 
     }
 
-    public List<Discipline> findAll() {
+    public List<DisciplineDTO> findAll() {
 
-        return disciplineRepository.findAll();
+        return fromToBaseDisciplina(disciplineRepository.findAll());
 
     }
 
-    public List<Discipline> findByName(String name) throws DisciplineNotFoundException {
+    public List<DisciplineDTO> findByName(String name) throws DisciplineNotFoundException {
 
         List<Discipline> list = disciplineRepository.findByNameContainsIgnoreCase(name);
 
         if (list.size() == 0)
             throw new DisciplineNotFoundException();
 
-        return list;
+        return fromToBaseDisciplina(list);
 
     }
 
