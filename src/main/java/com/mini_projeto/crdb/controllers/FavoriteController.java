@@ -1,6 +1,7 @@
 package com.mini_projeto.crdb.controllers;
 
 import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
+import com.mini_projeto.crdb.exceptions.FavoriteNotBelongException;
 import com.mini_projeto.crdb.models.Favorite;
 import com.mini_projeto.crdb.services.FavoriteService;
 
@@ -29,6 +30,8 @@ public class FavoriteController {
             return new ResponseEntity<Favorite>(favoriteService.insert(token, id_discipline), HttpStatus.OK);
         } catch (DisciplineNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (FavoriteNotBelongException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }

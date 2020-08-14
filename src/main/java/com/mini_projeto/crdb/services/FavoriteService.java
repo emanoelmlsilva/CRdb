@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
+import com.mini_projeto.crdb.exceptions.FavoriteNotBelongException;
 import com.mini_projeto.crdb.exceptions.UserInvalidException;
 import com.mini_projeto.crdb.models.Discipline;
 import com.mini_projeto.crdb.models.Favorite;
@@ -31,9 +32,10 @@ public class FavoriteService {
     @Autowired
     private JWTService jwtService;
 
-    public Favorite insert(String headerAuthorization, String id_discipline) throws DisciplineNotFoundException {
+    public Favorite insert(String headerAuthorization, String id_discipline)
+            throws DisciplineNotFoundException, FavoriteNotBelongException {
 
-        Favorite favorite;
+        Favorite favoriteSave;
 
         Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);
 
@@ -42,21 +44,25 @@ public class FavoriteService {
         Discipline discipline = disciplineRepository.findById(id_discipline)
                 .orElseThrow(() -> new DisciplineNotFoundException());
 
-        favorite = favoriteRepository.findByCode(id_discipline).get();
+        Optional<Favorite> favorite = favoriteRepository.findByCode(id_discipline, userEmail.get());
 
-        if (favorite == null) {
+        if (!favorite.isPresent()) {
 
-            favorite = new Favorite();
+            favoriteSave = new Favorite();
 
-            favorite.setUser(user);
+            favoriteSave.setUser(user);
 
-            favorite.setDiscipline(discipline);
+            favoriteSave.setDiscipline(discipline);
+
+        } else if (!favorite.get().getUser().getEmail().equals(userEmail.get())) {
+            throw new FavoriteNotBelongException("Favoritar não pertence ao usuario");
         } else {
+            favoriteSave = favorite.get();
 
-            favorite.setActive(!favorite.getActive());
+            favoriteSave.setActive(!favoriteSave.getActive());
         }
 
-        return favoriteRepository.save(favorite);
+        return favoriteRepository.save(favoriteSave);
 
     }
 

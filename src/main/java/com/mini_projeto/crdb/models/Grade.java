@@ -12,18 +12,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @EqualsAndHashCode(of = { "id" })
-public class Favorite {
+public class Grade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Boolean active;
+    @Column(columnDefinition = "Decimal(10,2) default '0.00'")
+    private Double grade;
 
     @JsonIgnore
     @JoinColumn(name = "discipline_id")
@@ -34,9 +34,4 @@ public class Favorite {
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
-
-    public Favorite() {
-        this.active = true;
-    }
-
 }

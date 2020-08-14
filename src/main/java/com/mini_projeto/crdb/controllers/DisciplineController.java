@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mini_projeto.crdb.dtos.DisciplineDTO;
 import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
-import com.mini_projeto.crdb.models.Discipline;
 import com.mini_projeto.crdb.services.DisciplineService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -58,7 +58,8 @@ public class CommentService {
     }
 
     public Comment update(String headerAuthorization, Long id, CommentDTO commentDTO)
-            throws DisciplineNotFoundException, CommentRemovedException, CommentNotBelongException {
+            throws DisciplineNotFoundException, CommentRemovedException, CommentNotBelongException,
+            CommentNotExistsException {
 
         // ler o token e recuperar o subject
         Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);

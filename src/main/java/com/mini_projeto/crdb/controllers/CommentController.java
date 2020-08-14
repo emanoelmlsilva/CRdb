@@ -47,8 +47,8 @@ public class CommentController {
             return new ResponseEntity<Comment>(commentService.update(token, id, commentDTO), HttpStatus.OK);
         } catch (CommentAlreadyExistsException erro) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        } catch (DisciplineNotFoundException | CommentRemovedException | CommentNotExistsException
-                | CommentNotBelongException e) {
+        } catch (DisciplineNotFoundException | CommentRemovedException | CommentNotBelongException
+                | CommentNotExistsException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

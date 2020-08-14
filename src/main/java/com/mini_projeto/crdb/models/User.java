@@ -44,6 +44,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Favorite> favorite;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Grade> grades;
+
     public boolean isValid() {
         return !this.name.isBlank() && !this.lastName.isBlank() && !this.email.isBlank() && !this.password.isBlank();
     }
