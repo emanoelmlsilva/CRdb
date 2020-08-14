@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.mini_projeto.crdb.dtos.DisciplineDTO;
 import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
+import com.mini_projeto.crdb.exceptions.NotExistsException;
+import com.mini_projeto.crdb.models.Discipline;
+import com.mini_projeto.crdb.models.ProfielDiscipline;
 import com.mini_projeto.crdb.services.DisciplineService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,13 +30,28 @@ public class DisciplineController {
         return new ResponseEntity<List<DisciplineDTO>>(disciplineService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<List<DisciplineDTO>> findAll(@PathVariable String name) {
+    // @GetMapping("/{name}")
+    // public ResponseEntity<List<DisciplineDTO>> findAll(@PathVariable String name)
+    // {
+    // try {
+    // return new
+    // ResponseEntity<List<DisciplineDTO>>(disciplineService.findByName(name),
+    // HttpStatus.OK);
+    // } catch (DisciplineNotFoundException erro) {
+    // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // }
+    // }
+
+    @GetMapping("/{code}")
+    public ResponseEntity<ProfielDiscipline> findByCode(@RequestHeader("Authorization") String token,
+            @PathVariable String code) {
+
         try {
-            return new ResponseEntity<List<DisciplineDTO>>(disciplineService.findByName(name), HttpStatus.OK);
-        } catch (DisciplineNotFoundException erro) {
+
+            return new ResponseEntity<ProfielDiscipline>(disciplineService.findProfielDiscipline(token, code),
+                    HttpStatus.OK);
+        } catch (NotExistsException erro) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }

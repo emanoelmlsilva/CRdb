@@ -1,6 +1,7 @@
 package com.mini_projeto.crdb.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.mini_projeto.crdb.models.Discipline;
 
@@ -11,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface DisciplineRepository extends JpaRepository<Discipline, String> {
 
     List<Discipline> findByNameContainsIgnoreCase(String name);
+
+    Optional<Discipline> findByCode(String code);
 }
