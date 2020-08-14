@@ -2,18 +2,23 @@ package com.mini_projeto.crdb.services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mini_projeto.crdb.dtos.DisciplineDTO;
+import com.mini_projeto.crdb.dtos.DisciplineRankingDTO;
 import com.mini_projeto.crdb.exceptions.DisciplineNotFoundException;
 import com.mini_projeto.crdb.exceptions.UserInvalidException;
 import com.mini_projeto.crdb.models.Discipline;
+import com.mini_projeto.crdb.models.Grade;
 import com.mini_projeto.crdb.models.User;
 import com.mini_projeto.crdb.repositories.DisciplineRepository;
 import com.mini_projeto.crdb.repositories.UserRepository;
@@ -26,6 +31,9 @@ public class DisciplineService {
 
     @Autowired
     private DisciplineRepository disciplineRepository;
+
+    @Autowired
+    private JWTService jwtService;
 
     @Autowired
     private UserRepository userRepository;
@@ -77,6 +85,25 @@ public class DisciplineService {
 
         return fromToBaseDisciplina(list);
 
+    }
+
+    public List<DisciplineRankingDTO> ordeByGrade(String headerAuthorization) {
+
+        Optional<String> userEmail = jwtService.recoverUser(headerAuthorization);
+
+        validateUser(userEmail);
+
+        List<Discipline> list = disciplineRepository.findAll();
+
+        List<DisciplineRankingDTO> listRanking = fromToDisciplineRankingDTO(list);
+
+        return listRanking.stream().sorted(Comparator.comparingDouble(DisciplineRankingDTO::getGride).reversed())
+                .collect(Collectors.toList());
+
+    }
+
+    private List<DisciplineRankingDTO> fromToDisciplineRankingDTO(List<Discipline> list) {
+        return list.stream().map(discipline -> new DisciplineRankingDTO(discipline)).collect(Collectors.toList());
     }
 
     public List<DisciplineDTO> fromToBaseDisciplina(List<Discipline> disciplines) {
